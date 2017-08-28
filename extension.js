@@ -299,12 +299,14 @@ TaskBar.prototype =
 
     init: function(extensionMeta, schema)
     {
+        global.log('GNOME_TASKBAR init');
         this.extensionMeta = extensionMeta;
         this.schema = schema;
     },
 
     onParamChanged: function()
     {
+        global.log('GNOME_TASKBAR onParamChanged');
         if (! this.settings.get_boolean("reset-flag"))
         {
             this.disable();
@@ -314,6 +316,7 @@ TaskBar.prototype =
 
     enable: function()
     {
+        global.log('GNOME_TASKBAR enable');
         let settings = new Lib.Settings(this.schema);
         this.settings = settings.getSettings();
 
@@ -393,6 +396,7 @@ TaskBar.prototype =
 
     disable: function()
     {
+        global.log('GNOME_TASKBAR disable');
         //Disconnect Overview Signals
         if (this.overviewHidingId !== null)
         {
@@ -646,6 +650,7 @@ TaskBar.prototype =
 
     setSignals: function()
     {
+        global.log('GNOME_TASKBAR setSignals');
         //Reinit Extension on Param Change
         this.settingSignals =
         [
@@ -742,6 +747,7 @@ TaskBar.prototype =
     //Monitor Change, Icon and Global Theme Change
     setSystemSignals: function()
     {
+        global.log('GNOME_TASKBAR setSystemSignals');
         this.monitorChangedId = null;
         this.iconThemeChangedId = null;
         this.globalThemeChangedId = null;
@@ -764,6 +770,7 @@ TaskBar.prototype =
     //TaskBar in Overview Mode
     setOverview: function()
     {
+        global.log('GNOME_TASKBAR setOverview');
         if (! this.settings.get_boolean("overview"))
         {
             this.mainBox = this.boxMain;
@@ -789,6 +796,7 @@ TaskBar.prototype =
     //First Start
     firstStart: function()
     {
+        global.log('GNOME_TASKBAR firstStart');
         if ((this.settings.get_string("extension-path") === 'unset') || (this.settings.get_string("extension-path") !== Extension.path))
         {
             this.settings.set_string("extension-path", Extension.path);
@@ -807,6 +815,7 @@ TaskBar.prototype =
     //Verify other Extensions
     otherExtensions: function()
     {
+        global.log('GNOME_TASKBAR otherExtensions');
         //Find out if the bottom panel extension is enabled
 	this.tbp = false;
 	let schemaSettings = new Gio.Settings({ schema: 'org.gnome.shell' });
@@ -818,6 +827,7 @@ TaskBar.prototype =
     //Add TaskBar
     addTaskBar: function()
     {
+        global.log('GNOME_TASKBAR addTaskBar');
         this.setTaskBar = false;
         if ((this.settings.get_boolean("display-tasks")) ||
             (this.settings.get_boolean("display-desktop-button")) ||
@@ -849,6 +859,7 @@ TaskBar.prototype =
     //Add Separators
     addSeparators: function()
     {
+        global.log('GNOME_TASKBAR addSeparators');
         if (this.setTaskBar)
         {
             let separatorLeftBoxMain = this.settings.get_int('separator-left-box-main');
@@ -896,6 +907,7 @@ TaskBar.prototype =
     //Export Settings
     exportSettings: function()
     {
+        global.log('GNOME_TASKBAR exportSettings');
         if (this.settings.get_boolean("export-settings"))
         {
             Main.Util.trySpawnCommandLine('sh ' + Extension.path + '/scripts/export.sh');
@@ -906,6 +918,7 @@ TaskBar.prototype =
     //Import Settings
     importSettings: function()
     {
+        global.log('GNOME_TASKBAR importSettings');
         if (this.settings.get_boolean("import-settings"))
         {
             Main.Util.trySpawnCommandLine('sh ' + Extension.path + '/scripts/import.sh');
@@ -916,6 +929,7 @@ TaskBar.prototype =
     //Reset All !
     resetAll: function()
     {
+        global.log('GNOME_TASKBAR resetAll');
         if (this.settings.get_boolean("reset-all"))
         {
             Main.Util.trySpawnCommandLine('dconf reset -f /org/gnome/shell/extensions/TaskBar/');
@@ -925,6 +939,7 @@ TaskBar.prototype =
     //Find Apps
     findApps: function()
     {
+        global.log('GNOME_TASKBAR findApps');
         if (this.settings.get_boolean("find-apps"))
         {
             Main.overview.show();
@@ -936,6 +951,7 @@ TaskBar.prototype =
     //Keybindings
     keybindings: function()
     {
+        global.log('GNOME_TASKBAR keybindings');
         if (Main.wm.addKeybinding && Shell.ActionMode) //3.16
             Main.wm.addKeybinding(PREVIOUSKEY, this.settings, Meta.KeyBindingFlags.NONE,
             Shell.ActionMode.NORMAL | Shell.ActionMode.MESSAGE_TRAY,
@@ -974,6 +990,7 @@ TaskBar.prototype =
     //Keybinding Activate Previous Task
     keyPreviousTask: function()
     {
+        global.log('GNOME_TASKBAR keyPreviousTask');
         this.previousTask = null;
         let focusWindow = global.display.focus_window;
         let activeWorkspace = global.screen.get_active_workspace();
@@ -1000,6 +1017,7 @@ TaskBar.prototype =
     //Keybinding Activate Next Task
     keyNextTask: function()
     {
+        global.log('GNOME_TASKBAR keyNextTask');
         this.nextTask = false;
         let focusWindow = global.display.focus_window;
         let activeWorkspace = global.screen.get_active_workspace();
@@ -1027,6 +1045,7 @@ TaskBar.prototype =
     //Keybinding Toggle Desktop
     keyToggleDesktop: function()
     {
+        global.log('GNOME_TASKBAR keyToggleDesktop');
         let maxWindows = false;
         let userTime = null;
         let activeWorkspace = global.screen.get_active_workspace();
@@ -1061,6 +1080,7 @@ TaskBar.prototype =
     //Align Position
     onPositionChanged: function()
     {
+        global.log('GNOME_TASKBAR onPositionChanged');
         this.showTray = null;
         this.messageTrayShowingId = null;
         this.messageTrayHidingId = null;
@@ -1083,6 +1103,7 @@ TaskBar.prototype =
 
     defineBoxChanged: function()
     {
+        global.log('GNOME_TASKBAR defineBoxChanged');
         this.panelBox = this.settings.get_int('panel-box');
         if (this.panelBox === 1)
             this.newBox = Main.panel._leftBox;
@@ -1098,12 +1119,14 @@ TaskBar.prototype =
 
     onBoxChanged: function()
     {
+        global.log('GNOME_TASKBAR onBoxChanged');
         this.newBox.remove_child(this.boxMain);
         this.defineBoxChanged();
     },
 
     appearanceOrder: function()
     {
+        global.log('GNOME_TASKBAR appearanceOrder');
         if (this.setTaskBar)
         {
             this.appearances =
@@ -1145,6 +1168,7 @@ TaskBar.prototype =
     //Appearance Position changed
     appearancePositionChange: function()
     {
+        global.log('GNOME_TASKBAR appearancePositionChange');
         if (this.settings.get_boolean("position-changed"))
         {
             this.settings.set_boolean("position-changed", false);
@@ -1155,6 +1179,7 @@ TaskBar.prototype =
     //Hide TaskBar in Overview
     showMainBox: function()
     {
+        global.log('GNOME_TASKBAR showMainBox');
         this.mainBox.show();
         if ((this.settings.get_enum("tray-button") !== 0) && (! this.bottomPanelEndIndicator) && (this.settings.get_boolean("bottom-panel")) && (ShellVersion[1] <= 14))
             this.boxBottomPanelTrayButton.show();
@@ -1162,6 +1187,7 @@ TaskBar.prototype =
 
     hideMainBox: function()
     {
+        global.log('GNOME_TASKBAR hideMainBox');
         this.mainBox.hide();
         if ((this.settings.get_enum("tray-button") !== 0) && (! this.bottomPanelEndIndicator) && (this.settings.get_boolean("bottom-panel")) && (ShellVersion[1] <= 14))
             this.boxBottomPanelTrayButton.hide();
@@ -1170,6 +1196,7 @@ TaskBar.prototype =
     //Add Favorites
     addFavorites: function(buttonfavorite, favoriteapp)
     {
+        global.log('GNOME_TASKBAR addFavorites');
         this.installedChangedId = null;
         this.changedId = null;
         if (this.settings.get_boolean("display-favorites"))
@@ -1213,6 +1240,7 @@ TaskBar.prototype =
     //Add Appview Button
     addShowAppsButton: function()
     {
+        global.log('GNOME_TASKBAR addShowAppsButton');
         if (this.settings.get_boolean("display-showapps-button"))
         {
             let iconPath = this.settings.get_string("appview-button-icon");
@@ -1237,6 +1265,7 @@ TaskBar.prototype =
     //Add Workspace Button
     addWorkspaceButton: function()
     {
+        global.log('GNOME_TASKBAR addWorkspaceButton');
         this.workspaceSwitchedId = null;
         this.nWorkspacesId = null;
         if (this.settings.get_boolean("display-workspace-button"))
@@ -1263,6 +1292,7 @@ TaskBar.prototype =
 
     updateWorkspaces: function()
     {
+        global.log('GNOME_TASKBAR updateWorkspaces');
         this.activeWorkspaceIndex = global.screen.get_active_workspace().index();
 	let workspaceButtonWidth = this.settings.get_int("workspace-button-width");
         this.totalWorkspace = global.screen.n_workspaces - 1;
@@ -1285,6 +1315,7 @@ TaskBar.prototype =
     //Add Desktop Button
     addDesktopButton: function()
     {
+        global.log('GNOME_TASKBAR addDesktopButton');
         if (this.settings.get_boolean("display-desktop-button"))
         {
             let iconPath = this.settings.get_string("desktop-button-icon");
@@ -1309,6 +1340,7 @@ TaskBar.prototype =
     //Add Tray Button
     addTrayButton: function()
     {
+        global.log('GNOME_TASKBAR addTrayButton');
         this.messageTrayCountAddedId = null;
         this.messageTrayCountRemovedId = null;
         if ((this.settings.get_boolean("bottom-panel")) && (this.settings.get_enum("tray-button") !== 0) && (ShellVersion[1] <= 14))
@@ -1332,6 +1364,7 @@ TaskBar.prototype =
 
     messageTrayCount: function()
     {
+        global.log('GNOME_TASKBAR messageTrayCount');
         let indicatorCount = 0;
         indicatorCount = Main.messageTray.getSources().length;
         if (((indicatorCount === 0) && (this.settings.get_enum("tray-button-empty") === 0)) ||
@@ -1353,6 +1386,7 @@ TaskBar.prototype =
 
     messageTrayIcon: function()
     {
+        global.log('GNOME_TASKBAR messageTrayIcon');
         let iconPath = this.settings.get_string("tray-button-icon");
         if (iconPath === 'unset')
             iconPath = BPTRAYICON;
@@ -1372,6 +1406,7 @@ TaskBar.prototype =
     //Activities Button
     displayActivities: function()
     {
+        global.log('GNOME_TASKBAR displayActivities');
         this.initDisplayActivitiesButton();
         if (this.settings.get_boolean("activities-button"))
             this.activitiesContainer.show();
@@ -1379,6 +1414,7 @@ TaskBar.prototype =
 
     initDisplayActivitiesButton: function()
     {
+        global.log('GNOME_TASKBAR initDisplayActivitiesButton');
         if (! this.settings.get_boolean("activities-button"))
         {
             this.activitiesContainer = Main.panel.statusArea.activities.container;
@@ -1391,6 +1427,7 @@ TaskBar.prototype =
 
     colorActivities: function()
     {
+        global.log('GNOME_TASKBAR colorActivities');
         this.activitiesColor = this.settings.get_string("activities-button-color");
         if (this.activitiesColor !== "unset")
         {
@@ -1404,6 +1441,7 @@ TaskBar.prototype =
     //Top Panel
     displayTopPanel: function()
     {
+        global.log('GNOME_TASKBAR displayTopPanel');
         this.initDisplayTopPanel();
         if (this.settings.get_boolean("top-panel"))
         {
@@ -1418,6 +1456,7 @@ TaskBar.prototype =
 
     initDisplayTopPanel: function()
     {
+        global.log('GNOME_TASKBAR initDisplayTopPanel');
         if (! this.settings.get_boolean("top-panel"))
         {
             Main.layoutManager.removeChrome(Main.layoutManager.panelBox);
@@ -1431,6 +1470,7 @@ TaskBar.prototype =
     //Hot Corner
     enableHotCorner: function()
     {
+        global.log('GNOME_TASKBAR enableHotCorner');
         this.initEnableHotCorner();
         if (this.settings.get_boolean("hot-corner"))
         {
@@ -1440,6 +1480,7 @@ TaskBar.prototype =
 
     initEnableHotCorner: function()
     {
+        global.log('GNOME_TASKBAR initEnableHotCorner');
         if (! this.settings.get_boolean("hot-corner"))
         {
             Main.layoutManager.hotCorners[Main.layoutManager.primaryIndex]._toggleOverview = function() {};
@@ -1450,6 +1491,7 @@ TaskBar.prototype =
     //Application Menu
     displayApplicationMenu: function()
     {
+        global.log('GNOME_TASKBAR displayApplicationMenu');
         this.initDisplayApplicationMenu();
         if (this.settings.get_boolean("application-menu"))
         {
@@ -1464,6 +1506,7 @@ TaskBar.prototype =
 
     initDisplayApplicationMenu: function()
     {
+        global.log('GNOME_TASKBAR initDisplayApplicationMenu');
         this.appMenuContainer = Main.panel.statusArea.appMenu.container;
         if (! this.settings.get_boolean("application-menu"))
         {
@@ -1484,6 +1527,7 @@ TaskBar.prototype =
 
     colorApplicationMenu: function()
     {
+        global.log('GNOME_TASKBAR colorApplicationMenu');
         this.appMenuColor = this.settings.get_string("application-menu-color");
         if (this.appMenuColor !== "unset")
         {
@@ -1498,6 +1542,7 @@ TaskBar.prototype =
     //Date Menu
     displayDateMenu: function()
     {
+        global.log('GNOME_TASKBAR displayDateMenu');
         this.initDisplayDateMenu();
         if (this.settings.get_boolean("date-menu"))
             this.dateMenuContainer.show();
@@ -1505,6 +1550,7 @@ TaskBar.prototype =
 
     initDisplayDateMenu: function()
     {
+        global.log('GNOME_TASKBAR initDisplayDateMenu');
         if (! this.settings.get_boolean("date-menu"))
         {
             this.dateMenuContainer = Main.panel.statusArea.dateMenu.container;
@@ -1517,6 +1563,7 @@ TaskBar.prototype =
 
     colorDateMenu: function()
     {
+        global.log('GNOME_TASKBAR colorDateMenu');
         this.dateMenuColor = this.settings.get_string("date-menu-color");
         if (this.dateMenuColor !== "unset")
         {
@@ -1530,6 +1577,7 @@ TaskBar.prototype =
     //System Menu
     displaySystemMenu: function()
     {
+        global.log('GNOME_TASKBAR displaySystemMenu');
         this.initDisplaySystemMenu();
         if (this.settings.get_boolean("system-menu"))
             this.systemMenuContainer.show();
@@ -1537,6 +1585,7 @@ TaskBar.prototype =
 
     initDisplaySystemMenu: function()
     {
+        global.log('GNOME_TASKBAR initDisplaySystemMenu');
         if (! this.settings.get_boolean("system-menu"))
         {
             this.systemMenuContainer = Main.panel.statusArea.aggregateMenu.container;
@@ -1549,6 +1598,7 @@ TaskBar.prototype =
 
     colorSystemMenu: function()
     {
+        global.log('GNOME_TASKBAR colorSystemMenu');
         this.systemMenuColor = this.settings.get_string("system-menu-color");
         if (this.systemMenuColor !== "unset")
         {
@@ -1562,6 +1612,7 @@ TaskBar.prototype =
     //Dash
     displayDash: function()
     {
+        global.log('GNOME_TASKBAR displayDash');
         this.initDisplayDash();
         if (this.settings.get_boolean("dash"))
         {
@@ -1572,6 +1623,7 @@ TaskBar.prototype =
 
     initDisplayDash: function()
     {
+        global.log('GNOME_TASKBAR initDisplayDash');
         if (! this.settings.get_boolean("dash"))
         {
             this.dash = Main.overview._dash.actor;
@@ -1585,6 +1637,7 @@ TaskBar.prototype =
     //Workspace Selector
     displayWorkspaceSelector: function()
     {
+        global.log('GNOME_TASKBAR displayWorkspaceSelector');
         this.initDisplayWorkspaceSelector();
         if (this.settings.get_boolean("workspace-selector"))
         {
@@ -1595,6 +1648,7 @@ TaskBar.prototype =
 
     initDisplayWorkspaceSelector: function()
     {
+        global.log('GNOME_TASKBAR initDisplayWorkspaceSelector');
         if (! this.settings.get_boolean("workspace-selector"))
         {
             this.alwaysZoomOut = ThumbnailsSlider._getAlwaysZoomOut;
@@ -1608,6 +1662,7 @@ TaskBar.prototype =
     //Preferences Hover Component Event
     hoverEvent: function()
     {
+        global.log('GNOME_TASKBAR hoverEvent');
         this.hoverComponent = this.settings.get_int("hover-event");
         this.hoverStyle = "background-color: red; border-radius: 5px";
         if ((this.hoverComponent === 1) && (this.settings.get_boolean("display-tasks")))
@@ -1638,6 +1693,7 @@ TaskBar.prototype =
     //Active Task Frame / Background Color
     activeTaskFrame: function()
     {
+        global.log('GNOME_TASKBAR activeTaskFrame');
         this.backgroundColor = this.settings.get_string("active-task-background-color");
         this.activeTasksFrameColor = this.settings.get_string("tasks-frame-color");
         this.margin = this.settings.get_int("tasks-spaces");
@@ -1655,6 +1711,7 @@ TaskBar.prototype =
     //Inactive Task Frame / Background Color
     inactiveTaskFrame: function()
     {
+        global.log('GNOME_TASKBAR inactiveTaskFrame');
         this.inactiveBackgroundColor = this.settings.get_string("inactive-task-background-color");
         this.inactiveTasksFrameColor = this.settings.get_string("inactive-tasks-frame-color");
         this.inactiveMargin = this.settings.get_int("tasks-spaces");
@@ -1672,6 +1729,7 @@ TaskBar.prototype =
     //Top Panel Background Color and (Font) Size
     changeTopPanelBackgroundColor: function()
     {
+        global.log('GNOME_TASKBAR changeTopPanelBackgroundColor');
         this.panelSize = this.settings.get_int('panel-size');
         this.adjustTBIconSize = this.settings.get_int('tb-icon-size');
         this.adjustTBLabelSize = this.settings.get_int('tb-label-size');
@@ -1727,6 +1785,7 @@ TaskBar.prototype =
     //Bottom Panel
     bottomPanel: function()
     {
+        global.log('GNOME_TASKBAR bottomPanel');
         this.adjustTBIconSize = this.settings.get_int('tb-icon-size-bottom');
         this.adjustTBLabelSize = this.settings.get_int('tb-label-size-bottom');
         this.adjustContentSize = 0;
@@ -1787,6 +1846,7 @@ TaskBar.prototype =
     //Click Events
     onClickShowAppsButton: function(button, pspec)
     {
+        global.log('GNOME_TASKBAR onClickShowAppsButton');
         let numButton = pspec.get_button();
         this.leftbutton = LEFTBUTTON;
         this.rightbutton = RIGHTBUTTON;
@@ -1817,6 +1877,7 @@ TaskBar.prototype =
 
     onClickWorkspaceButton: function(button, pspec)
     {
+        global.log('GNOME_TASKBAR onClickWorkspaceButton');
         let numButton = pspec.get_button();
         if (numButton === LEFTBUTTON) //Left Button
         {
@@ -1836,6 +1897,7 @@ TaskBar.prototype =
 
     onClickDesktopButton: function(button, pspec)
     {
+        global.log('GNOME_TASKBAR onClickDesktopButton');
         let maxWindows = false;
         let userTime = null;
         let activeWorkspace = global.screen.get_active_workspace();
@@ -1875,6 +1937,7 @@ TaskBar.prototype =
 
     onClickTaskButton: function(button, pspec, window)
     {
+        global.log('GNOME_TASKBAR onClickTaskButton');
         if (this.taskMenuUp)
         {
             let taskMenuIsOpen = this.taskMenu.isOpen;
@@ -2081,6 +2144,7 @@ TaskBar.prototype =
 
     onClickTrayButton: function(button, pspec)
     {
+        global.log('GNOME_TASKBAR onClickTrayButton');
         let numButton = pspec.get_button();
         if (numButton === LEFTBUTTON) //Left Button
         {
@@ -2091,6 +2155,7 @@ TaskBar.prototype =
     //Scroll Events
     onScrollWorkspaceButton: function(button, event)
     {
+        global.log('GNOME_TASKBAR onScrollWorkspaceButton');
         if ((this.settings.get_enum("scroll-workspaces") === 1) || (this.settings.get_enum("scroll-workspaces") === 2))
         {
             let scrollDirection = event.get_scroll_direction();
@@ -2115,6 +2180,7 @@ TaskBar.prototype =
 
     onScrollTaskButton: function(button, event)
     {
+        global.log('GNOME_TASKBAR onScrollTaskButton');
         if ((this.settings.get_enum("scroll-tasks") === 1) || (this.settings.get_enum("scroll-tasks") === 2))
         {
             this.nextTask = false;
@@ -2173,6 +2239,7 @@ TaskBar.prototype =
     //Open Tray on Tray Button Hover
     onHoverTrayButton: function()
     {
+        global.log('GNOME_TASKBAR onHoverTrayButton');
         if (this.settings.get_boolean("hover-tray-button"))
             Main.messageTray.toggle();
     },
@@ -2180,6 +2247,7 @@ TaskBar.prototype =
     //Switch Task on Hover
     onHoverSwitchTask: function(button, window)
     {
+        global.log('GNOME_TASKBAR onHoverSwitchTask');
         if (! this.resetHover)
         {
             let focusWindow = global.display.focus_window;
@@ -2217,6 +2285,7 @@ TaskBar.prototype =
     //Window Demands Attention
     onWindowDemandsAttention: function(display, window)
     {
+        global.log('GNOME_TASKBAR onWindowDemandsAttention');
         if ((this.settings.get_boolean("display-tasks")) && (this.settings.get_boolean("blink-tasks")))
         {
             this.tasksList.forEach(
@@ -2237,6 +2306,7 @@ TaskBar.prototype =
 
     changeAttentionStyle: function(windowTask, buttonTask)
     {
+        global.log('GNOME_TASKBAR changeAttentionStyle');
         if ((! this.attentionStyleChanged) && (! windowTask.has_focus()))
         {
             buttonTask.set_style(this.attentionStyle);
@@ -2256,6 +2326,7 @@ TaskBar.prototype =
     //Init Windows Manage Callbacks
     initWindows: function(windowsList, type, window)
     {
+        global.log('GNOME_TASKBAR initWindows');
         if (this.settings.get_boolean("display-tasks"))
         {
             //Active Task Frame / Background Color
@@ -2273,6 +2344,7 @@ TaskBar.prototype =
     //Taskslist
     onWindowsListChanged: function(windowsList, type, window)
     {
+        global.log('GNOME_TASKBAR onWindowsListChanged');
             if (type === 0) //Add all windows (On init or workspace change)
             {
                 this.cleanTasksList();
@@ -2301,6 +2373,7 @@ TaskBar.prototype =
     //Tasks Container
     tasksContainer: function(window)
     {
+        global.log('GNOME_TASKBAR tasksContainer');
         if ((this.tasksContainerWidth > 0) && (this.countTasks > 0) && (this.countTasks > this.tasksContainerWidth))
         {
             let buttonTaskWidth;
@@ -2339,6 +2412,7 @@ TaskBar.prototype =
     //Tasks Container Size
     tasksContainerSize: function()
     {
+        global.log('GNOME_TASKBAR tasksContainerSize');
         if (this.tasksContainerWidth > 0)
         {
             let spaces = this.settings.get_int("tasks-spaces");
@@ -2356,6 +2430,7 @@ TaskBar.prototype =
     //Active Tasks
     activeTasks: function(window)
     {
+        global.log('GNOME_TASKBAR activeTasks');
         let active = false;
         let activeWorkspace = global.screen.get_active_workspace();
         this.tasksList.forEach(
@@ -2377,6 +2452,7 @@ TaskBar.prototype =
     //Task Style
     onWindowChanged: function(window, type)
     {
+        global.log('GNOME_TASKBAR onWindowChanged');
         if (type === 0) //Focus
         {
             this.tasksList.forEach(
@@ -2486,6 +2562,7 @@ TaskBar.prototype =
     //Task Index
     searchTaskInList: function(window)
     {
+        global.log('GNOME_TASKBAR searchTaskInList');
         let index = null;
         for (let indexTask in this.tasksList)
         {
@@ -2502,6 +2579,7 @@ TaskBar.prototype =
     //Add Tasks
     addTaskInList: function(window)
     {
+        global.log('GNOME_TASKBAR addTaskInList');
         let app = Shell.WindowTracker.get_default().get_window_app(window);
         let buttonTask = null;
         let labelTask = null;
@@ -2633,6 +2711,7 @@ TaskBar.prototype =
     //Remove Tasks
     removeTaskInList: function(window)
     {
+        global.log('GNOME_TASKBAR removeTaskInList');
         let index = this.searchTaskInList(window);
         if (index !== null)
         {
@@ -2660,6 +2739,7 @@ TaskBar.prototype =
     //Reset Taskslist
     cleanTasksList: function()
     {
+        global.log('GNOME_TASKBAR cleanTasksList');
         for (let i = this.tasksList.length - 1; i >= 0; i--)
         {
             let [windowTask, buttonTask, signalsTask] = this.tasksList[i];
@@ -2679,6 +2759,7 @@ TaskBar.prototype =
 
     iconGeometry: function()
     {
+        global.log('GNOME_TASKBAR iconGeometry');
         for (let i = this.tasksList.length - 1; i >= 0; i--)
         {
             let [windowTask, buttonTask, signalsTask, labelTask] = this.tasksList[i];
@@ -2692,6 +2773,7 @@ TaskBar.prototype =
     //Preview
     getThumbnail: function(window, size)
     {
+        global.log('GNOME_TASKBAR getThumbnail');
         let thumbnail = null;
         let mutterWindow = window.get_compositor_private();
         if (mutterWindow)
@@ -2706,6 +2788,7 @@ TaskBar.prototype =
 
     showPreview: function(button, pspec, window)
     {
+        global.log('GNOME_TASKBAR showPreview');
         //Switch Task on Hover
         this.resetHover = false;
         if (this.settings.get_boolean("hover-switch-task"))
@@ -2825,6 +2908,7 @@ TaskBar.prototype =
 
     showFavoritesPreview: function(buttonfavorite, favoriteapp)
     {
+        global.log('GNOME_TASKBAR showFavoritesPreview');
         //Hide current preview if necessary
         this.hidePreview();
         this.previewFontSize = this.settings.get_int("preview-font-size");
@@ -2869,6 +2953,7 @@ TaskBar.prototype =
 
     setPreviewPosition: function()
     {
+        global.log('GNOME_TASKBAR setPreviewPosition');
         let [stageX, stageY] = this.button.get_transformed_position();
         let itemHeight = this.button.allocation.y2 - this.button.allocation.y1;
         let itemWidth = this.button.allocation.x2 - this.button.allocation.x1;
@@ -2899,6 +2984,7 @@ TaskBar.prototype =
 
     resetPreview: function(button, window)
     {
+        global.log('GNOME_TASKBAR resetPreview');
         //Reset Hover
         this.resetHover = true;
         if (this.previewTimer2 !== null)
@@ -2911,6 +2997,7 @@ TaskBar.prototype =
 
     hidePreview: function()
     {
+        global.log('GNOME_TASKBAR hidePreview');
         //Remove preview programmed if necessary
         if (this.previewTimer !== null)
         {

@@ -39,6 +39,7 @@ Windows.prototype =
 
     init: function(callBackThis, callbackWindowsListChanged, callbackWindowChanged)
     {
+        global.log('GNOME_TASKBAR init');
         //Set User Callback
         this.callBackThis = callBackThis;
         this.callbackWindowsListChanged = callbackWindowsListChanged;
@@ -58,6 +59,7 @@ Windows.prototype =
 
     destruct: function()
     {
+        global.log('GNOME_TASKBAR destruct');
         //Remove window manager signals
         let numWorkspaces = global.screen.n_workspaces;
         for (let i = 0; i < numWorkspaces; i++)
@@ -75,6 +77,7 @@ Windows.prototype =
 
     onWorkspaceChanged: function()
     {
+        global.log('GNOME_TASKBAR onWorkspaceChanged');
         let numWorkspaces = global.screen.n_workspaces;
         for (let i = 0; i < numWorkspaces; i++)
         {
@@ -90,6 +93,7 @@ Windows.prototype =
 
     buildWindowsList: function()
     {
+        global.log('GNOME_TASKBAR buildWindowsList');
         //Clean windows list
         this.cleanWindowsList();
 
@@ -113,11 +117,13 @@ Windows.prototype =
 
     sortWindowsCompareFunction: function(windowA, windowB)
     {
+        global.log('GNOME_TASKBAR sortWindowsCompareFunction');
         return windowA.get_stable_sequence() > windowB.get_stable_sequence();
     },
 
     onWindowChanged: function(window, object, type)
     {
+        global.log('GNOME_TASKBAR onWindowChanged');
         if (type === 0) //Focus changed
         {
             if (window.appears_focused)
@@ -131,18 +137,21 @@ Windows.prototype =
 
     onWindowAdded: function(workspace, window)
     {
+        global.log('GNOME_TASKBAR onWindowAdded');
         if (this.addWindowInList(window))
             this.callbackWindowsListChanged.call(this.callBackThis, this.windowsList, 1, window);
     },
 
     onWindowRemoved: function(workspace, window)
     {
+        global.log('GNOME_TASKBAR onWindowRemoved');
         if (this.removeWindowInList(window))
             this.callbackWindowsListChanged.call(this.callBackThis, this.windowsList, 2, window);
     },
 
     searchWindowInList: function(window)
     {
+        global.log('GNOME_TASKBAR searchWindowInList');
         let index = null;
         for (let indexWindow in this.windowsList)
         {
@@ -157,6 +166,7 @@ Windows.prototype =
 
     addWindowInList: function(window)
     {
+        global.log('GNOME_TASKBAR addWindowInList');
         let index = this.searchWindowInList(window);
         if (index === null && ! window.is_skip_taskbar())
         {
@@ -179,6 +189,7 @@ Windows.prototype =
 
     removeWindowInList: function(window)
     {
+        global.log('GNOME_TASKBAR removeWindowInList');
         let index = this.searchWindowInList(window);
         if (index !== null)
         {
@@ -209,6 +220,7 @@ Windows.prototype =
 
     cleanWindowsList: function()
     {
+        global.log('GNOME_TASKBAR cleanWindowsList');
         for (let i = this.windowsList.length -1 ; i>=0 ; i--)
             this.removeWindowInList(this.windowsList[i]);
     }
