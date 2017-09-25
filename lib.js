@@ -33,13 +33,11 @@ Settings.prototype =
 
     init: function(schema)
     {
-        global.log('GNOME_TASKBAR init');
         this.schema = schema;
     },
 
     getSettings: function()
     {
-        global.log('GNOME_TASKBAR getSettings');
         const GioSSS = Gio.SettingsSchemaSource;
         let schemaDir = Extension.dir.get_child('schemas');
         let schemaSource;
