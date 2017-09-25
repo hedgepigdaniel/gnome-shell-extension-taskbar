@@ -35,6 +35,7 @@ const _ = Gettext.gettext;
 const Config = imports.misc.config;
 const ExtensionUtils = imports.misc.extensionUtils;
 const ShellVersion = imports.misc.config.PACKAGE_VERSION.split(".").map(function (x) { return + x; });
+const Settings = imports.misc.settings;
 
 const schema = "org.gnome.shell.extensions.TaskBar";
 
@@ -106,6 +107,7 @@ Prefs.prototype =
     {
         let settings = new Lib.Settings(schema);
         this.settings = settings.getSettings();
+        this.settingsListener = new Settings.SettingsListener(this.settings);
     },
 
     buildPrefsWidget: function()
@@ -1492,7 +1494,7 @@ Prefs.prototype =
             {
                 if (this.panelBox > 1)
                 {
-                    this.signalMax = this.settings.connect("changed::position-max-right", Lang.bind(this, function()
+                    this.signalMax = this.settingsListener.connect("changed::position-max-right", Lang.bind(this, function()
                     {
                         this.settings.disconnect(this.signalMax);
                         this.panelPosition = this.settings.get_int("position-max-right");
